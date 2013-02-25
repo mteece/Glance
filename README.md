@@ -6,7 +6,7 @@ Lightweight local storage engine prototype. Uses local storage, serialization. S
 Getting Started
 ---------------
 
-* Dependencies on Modernizer, randomUUID, localStorage.
+* Dependencies on Modernizer, randomUUID, Underscore, and localStorage.
 
 Need some support to abstract it. It is currently rough and still tied to its one time use. Basically make it more flexible. Add Grunt JS, builds, tests, etc. Like to make it function independent of Modernizer and Underscore. Any help is appreciated.
 
@@ -38,3 +38,34 @@ Data looks like.
 			{pk: "7384D2E2-D2D4-4440-BC0A-D1C83A0DCA5E", title: "", description: ""}
 		]
 	}
+
+Usage
+-----
+
+How it works currently. Requires jQuery, Modernizer, randomUUID, Underscore.
+
+	/* Main.js */
+	$(document).ready(function() {
+	  // Handler for .ready() called.
+
+	  	// For demo purposes we flush the data.
+	  	// Glance.clear();
+	  	if(Glance.catalog.entries.length <= 0) {
+			Glance.add(Glance.entry('IOS Programming', 'A book about IOS stuff.'));
+			Glance.add(Glance.entry('Overdosed America', 'A book about drugs in the USA.'));
+			Glance.add(Glance.entry('The Happiness Project', 'A book about happiness.'));
+		}
+
+		var books = Glance.findAll();
+		var len = books.length;
+		var cat = $('.catalog');
+		if(len > 0) {
+			_.each(books, function(element, index, list){
+				cat.append(
+		    	$('<li>').append(
+		        $('<a>').attr('href','/detail/' + element.pk).append(
+		            $('<span>').attr('class', 'tab').append(element.title)
+		)));   
+			});
+		}
+	});
