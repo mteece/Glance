@@ -48,13 +48,10 @@ module.exports = function(grunt) {
       },
       gruntfile: {
         src: 'Gruntfile.js'
-      },
-      lib_test: {
-        src: ['lib/**/*.js', 'test/**/*.js']
-      }
-    },
-    qunit: {
-      files: ['test/**/*.html']
+      }//,
+      //lib_test: {
+      //  src: ['lib/**/*.js', 'test/**/*.js']
+      //}
     },
     watch: {
       gruntfile: {
@@ -63,9 +60,21 @@ module.exports = function(grunt) {
       },
       lib_test: {
         files: '<%= jshint.lib_test.src %>',
-        tasks: ['jshint:lib_test', 'qunit']
+        tasks: ['jshint:lib_test', 'simplemocha']
+      }
+    },
+    
+    jasmine: {
+      js: {
+        src: 'src/**/*.js',
+        options: {
+          specs: 'test/*-spec.js',
+          helpers: 'test/helpers/*',
+          vendor: 'test/vendor/*'
+        }
       }
     }
+    
   });
 
   // These plugins provide necessary tasks.
@@ -73,10 +82,12 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-nodeunit');
   grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  
+   // Register tasks.
+  grunt.loadNpmTasks('grunt-contrib-jasmine');
+  grunt.loadNpmTasks("grunt-modernizr");
 
   // Default task.
-  grunt.registerTask('default', ['jshint', 'qunit', 'concat', 'uglify']);
-
+  grunt.registerTask('default', ['jshint', 'jasmine', 'concat', 'uglify']);
 };
