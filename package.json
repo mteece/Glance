@@ -22,7 +22,6 @@
     "grunt-contrib-qunit": "~0.1.1",
     "grunt-contrib-uglify": "~0.1.1",
     "grunt-contrib-watch": "~0.2.0",
-    "grunt-modernizr": "~0.2.0",
     "underscore": "~1.4.4",
     "uuid": "~1.4.0"
   }

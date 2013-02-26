@@ -17,7 +17,7 @@ module.exports = function(grunt) {
         stripBanners: true
       },
       dist: {
-        src: ['lib/<%= pkg.name %>.js'],
+        src: ['lib/<%= pkg.name %>.js', 'src/**/*.js'],
         dest: 'dist/<%= pkg.name %>.js'
       }
     },
@@ -86,7 +86,6 @@ module.exports = function(grunt) {
   
    // Register tasks.
   grunt.loadNpmTasks('grunt-contrib-jasmine');
-  grunt.loadNpmTasks("grunt-modernizr");
 
   // Default task.
   grunt.registerTask('default', ['jshint', 'jasmine', 'concat', 'uglify']);

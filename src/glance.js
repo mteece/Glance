@@ -5,9 +5,8 @@ var Glance = Glance || {};
 
 	Glance.init = function() {
 		//debugger;
-		if (Modernizr.localstorage) {
+		if (window.localStorage && window.JSON) {
 			// window.localStorage is available!
-			console.log('YES');
 			this.database();
 			return true;
 		} else {
@@ -23,14 +22,13 @@ var Glance = Glance || {};
 	};
 
 	Glance.entry = function(t, d) {
-
 		var obj = {};
 		obj.pk = randomUUID();
 		obj.title = t || '';
 		obj.description = d || '';
-
 		return obj;
 	};
+	
 
 	Glance.database = function(){
 		//debugger;
@@ -56,13 +54,19 @@ var Glance = Glance || {};
 			localStorage.setItem('catalog', JSON.stringify(this.catalog));
 		}
 	};
-
-	Glance.save = function(entry) {
+	
+	Glance.remove = function(entry) {
+		//debugger;
+		var retrievedObject = {};
 		if(entry && this.catalog) {
-
+			var arr = _.without(this.catalog.entries, entry);
+			if(arr.length > 0) {
+				this.catalog.entries = arr;
+				localStorage.setItem('catalog', JSON.stringify(this.catalog));
+			}
 		}
 	};
-
+	
 	Glance.add = function(entry) {
 		// debugger;
 		if(entry && this.catalog) {
@@ -71,6 +75,7 @@ var Glance = Glance || {};
 			// Sync the localStorage.
 			localStorage.setItem('catalog', JSON.stringify(this.catalog));
 		}
+		return entry;
 	};
 
 	// Returns the first value that matches all of the key-value pairs
