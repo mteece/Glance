@@ -1,102 +1,104 @@
-// Namespace for Glance.
-var Glance = Glance || {};
+/*
+ * typeahead.js
+ * https://github.com/twitter/typeahead
+ * Copyright 2013 Twitter, Inc. and other contributors; Licensed MIT
+ */
 
-(function() {
-
-	Glance.init = function() {
-		//debugger;
+var Glance = (function() {
+	var ds = window.localStorage, methods;
+	
+	function Glance() {
+		this.storage = 'store';
+		this.data = { 'entries': [] };
 		if (window.localStorage && window.JSON) {
-			// window.localStorage is available!
-			this.database();
-			return true;
-		} else {
-			console.log('NO');
-			// no native support for HTML5 storage :(
-			// maybe try dojox.storage or a third-party solution
-			return false;
-		}
-	};
-
-	Glance.catalog = {
-		'entries': []
-	};
-
-	Glance.entry = function(t, d) {
-		var obj = {};
-		obj.pk = randomUUID();
-		obj.title = t || '';
-		obj.description = d || '';
-		return obj;
-	};
-	
-
-	Glance.database = function(){
-		//debugger;
-
-		// Retrieve the object from storage
-		var retrievedObject = localStorage.getItem('catalog');
-		if(retrievedObject) {
-			// We have a catalog.
-			this.catalog = JSON.parse(retrievedObject);
-		} else {
-			// We don't have a catalog Put the object into storage.
-			localStorage.setItem('catalog', JSON.stringify(this.catalog));
-		}
-		console.log(this.catalog);
-	};
-
-	Glance.clear = function() {
-		// debugger;
-		if(this.catalog) {
-			// Flush it.
-			this.catalog.entries = [];
-			// Sync the changes with localstorage.
-			localStorage.setItem('catalog', JSON.stringify(this.catalog));
-		}
-	};
-	
-	Glance.remove = function(entry) {
-		//debugger;
-		var retrievedObject = {};
-		if(entry && this.catalog) {
-			var arr = _.without(this.catalog.entries, entry);
-			if(arr.length > 0) {
-				this.catalog.entries = arr;
-				localStorage.setItem('catalog', JSON.stringify(this.catalog));
+			var retrievedObject = localStorage.getItem(this.storage);
+			if(retrievedObject) {
+				this.data = decode(retrievedObject);
+			} else {
+				// We don't have a 'key' so put the object into DOM storage.
+				ds.setItem(this.storage, encode(this.data));
 			}
 		}
-	};
+	}
 	
-	Glance.add = function(entry) {
-		// debugger;
-		if(entry && this.catalog) {
-			// Push it to the end of the array.
-			this.catalog.entries.push(entry);
-			// Sync the localStorage.
-			localStorage.setItem('catalog', JSON.stringify(this.catalog));
-		}
-		return entry;
-	};
-
-	// Returns the first value that matches all of the key-value pairs
-	// Glance.find({pk: "7384D2E2-D2D4-4440-BC0A-D1C83A0DCA5E"});
- 	// Glance.find({pk: "7384D2E2-D2D4-4440-BC0A-D1C83A0DCA5E", title: "ABC"});
- 	Glance.find = function(props) {
- 		var retrievedObject = {};
-		if(props && this.catalog){
-			retrievedObject = _.findWhere(this.catalog.entries, props);
-		}
-		return retrievedObject;
-	};
-
-	Glance.findAll = function() {
-		var retrievedObjects = [];
-		if(this.catalog) {
-			return this.catalog.entries;
-		}
-		return retrievedObjects;
-	};
-
-	Glance.init();
-
-}());
+	if ((window.localStorage && window.JSON) && window._) {
+		methods = {
+			/* Private methods. */
+			
+			_fetch: function(obj) {
+				var idx = _.indexOf(this.data.entries, obj);
+				return idx;
+			},
+			
+			_fetchById: function(uuid) {
+				return _.findWhere(this.data.entries, {id: uuid});
+			},
+			
+			/* Public methods. */
+			
+			save: function(obj) {
+				if(obj.id) {
+					var index = this._fetch(obj);
+					if(index >= 0) {
+						this.data.entries[index] = obj;
+						localStorage.setItem(this.storage, encode(this.data));
+						return obj;
+					} else {
+						return false;
+					}
+				} else {
+					obj.id = UUID.generate();
+					this.data.entries.push(obj);
+					localStorage.setItem(this.storage, encode(this.data));
+					return obj;
+				}		
+			},
+			
+			remove: function(obj) {
+				var arr = _.without(this.data.entries, _.findWhere(this.data.entries, obj));
+				if(arr.length > 0) {
+					this.data.entries = arr;
+					localStorage.setItem(this.storage, encode(this.data));
+				}
+			},
+			
+			select: function(props) {
+				return _.findWhere(this.data.entries, props);
+			},
+			
+			selectAll: function() {
+				return this.data.entries;
+			},
+			
+			count: function() {
+				return this.data.entries.length;
+			},
+			
+			flush: function() {
+				this.data = { 'entries': [] };
+				localStorage.setItem(this.storage, encode(this.data));
+			}
+		};
+	} else {
+		methods = {
+			save: function() {},
+			remove: function() {},
+			select: function() {},
+			selectAll: function() {},
+			count: function() {},
+			flush: function() {}
+		};
+	}
+	
+	_.extend(Glance.prototype, methods);
+	
+	return Glance;
+	
+	function encode(val) {
+		return JSON.stringify(val);
+	}
+	
+	function decode(val) {
+		return JSON.parse(val);
+	}
+})();

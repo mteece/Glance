@@ -60,7 +60,7 @@ module.exports = function(grunt) {
       },
       lib_test: {
         files: '<%= jshint.lib_test.src %>',
-        tasks: ['jshint:lib_test', 'simplemocha']
+        tasks: ['jshint:lib_test', 'jasmine']
       }
     },
     
@@ -69,7 +69,7 @@ module.exports = function(grunt) {
         src: 'src/**/*.js',
         options: {
           specs: 'test/*-spec.js',
-          helpers: 'test/helpers/*',
+          helpers: 'test/helpers/**/*.js',
           vendor: 'test/vendor/*'
         }
       }

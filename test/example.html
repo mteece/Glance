@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="vendor/jquery-1.9.0.min.js"></script>
+        <script src="vendor/uuid.core.js"></script>
+        <script src="vendor/underscore-min.js"></script>
+        <script src="helpers/exemplar/exemplar-shCore.js"></script>
+	<script src="helpers/exemplar/shBrushJScript.js"></script>
+	<script src="helpers/exemplar/shBrushXml.js"></script>
+	<script src="helpers/exemplar/exemplar.js"></script>
+        <script src="../dist/Glance.js"></script>
+        <link href="helpers/exemplar/exemplar-shCore.css" rel="stylesheet" media="screen">
+	<link href="helpers/exemplar/shThemeDefault.css" rel="stylesheet" media="screen">
+    </head>
+<body>
+    <script>
+        $(document).ready(function() {
+            exemplar.init();
+        });
+    </script>
+    
+    <div id="example-1" data-exemplar-type="js">
+        <script type="exemplar">
+        g = new Glance();
+        g.flush(); // Only called for examples the data is persistant.
+        g.save({title: 'IOS Programming', description: 'A book about IOS stuff.'});
+        g.save({title: 'Overdosed America', description:'A book about drugs in the USA.'});
+        g.save({title: 'The Happiness Project', description:'A book about happiness.'});
+        return g.count();
+        </script>
+        <script type="exemplar-expected-output">3</script>
+            <div class="row-fluid">
+                <div class="span8 exemplar-docs-example">
+                <h4 class="exemplar-docs-caption">Code</h4>
+                <pre class="brush: js" data-exemplar-target="1"></pre>
+            </div>
+            <div class="span4 exemplar-docs-example">
+                <h4 class="exemplar-docs-caption">Result</h4>
+                <pre class="brush: js" data-exemplar-output="1"></pre>
+            </div>
+        </div>
+    </div>
+    
+    <div id="example-2" data-exemplar-type="js">
+        <script type="exemplar">
+        g = new Glance();
+        g.flush(); // Only called for examples the data is persistant.
+        g.save({title: 'IOS Programming', description: 'A book about IOS stuff.'});
+        g.save({title: 'Overdosed America', description:'A book about drugs in the USA.'});
+        g.save({title: 'The Happiness Project', description:'A book about happiness.'});
+        return g.select({title: 'The Happiness Project'}) ? true : false;
+        </script>
+        <script type="exemplar-expected-output">
+            true
+        </script>
+            <div class="row-fluid">
+                <div class="span8 exemplar-docs-example">
+                <h4 class="exemplar-docs-caption">Code</h4>
+                <pre class="brush: js" data-exemplar-target="1"></pre>
+            </div>
+            <div class="span4 exemplar-docs-example">
+                <h4 class="exemplar-docs-caption">Result</h4>
+                <pre class="brush: js" data-exemplar-output="1"></pre>
+            </div>
+        </div>
+    </div>
+    
+    <div id="example-3" data-exemplar-type="js">
+        <script type="exemplar">
+        g = new Glance();
+        g.flush(); // Only called for examples the data is persistant.
+        g.save({title: 'IOS Programming', description: 'A book about IOS stuff.'});
+        g.save({title:'Overdosed America', description:'A book about drugs in the USA.'});
+        g.save({title:'The Happiness Project', description:'A book about happiness.'});
+
+        g.remove({title:'The Happiness Project'});
+        return g.count() === 2 ? true : false;
+        
+        </script>
+        <script type="exemplar-expected-output">
+            true
+        </script>
+            <div class="row-fluid">
+                <div class="span8 exemplar-docs-example">
+                <h4 class="exemplar-docs-caption">Code</h4>
+                <pre class="brush: js" data-exemplar-target="1"></pre>
+            </div>
+            <div class="span4 exemplar-docs-example">
+                <h4 class="exemplar-docs-caption">Result</h4>
+                <pre class="brush: js" data-exemplar-output="1"></pre>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
