@@ -1,5 +1,5 @@
-/*! Glance - v0.0.1 - 2013-03-01
-* Copyright (c) 2013 ; Licensed  */
+/*! Glance - v0.0.1 - 2013-03-02
+* Copyright (c) 2013 Matthew Teece; Licensed  */
 var Glance = (function() {
 	var ds = window.localStorage, methods;
 	
