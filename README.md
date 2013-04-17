@@ -1,71 +1,116 @@
 Glance
 ======
 
-Lightweight local storage engine prototype. Uses local storage, serialization. Stores JSON objects.
+Lightweight local storage engine. Uses local storage, serialization to store JSON objects, find, and persist them.
 
 Getting Started
 ---------------
 
-* Dependencies on Modernizer, randomUUID, Underscore, and localStorage.
+Load the uncompressed or minified file.
 
-Need some support to abstract it. It is currently rough and still tied to its one time use. Basically make it more flexible. Add Grunt JS, builds, tests, etc. Like to make it function independent of Modernizer and Underscore. Any help is appreciated.
+```html
+<script src="../dist/Glance.js"></script>
+```
 
-Conceptual
-----------
-
-Look at https://github.com/LiosK/UUID.js for UUID
-
-	interface Storage {
-		readonly attribute unsigned long length;
-		[IndexGetter] DOMString key(in unsigned long index);
-		[NameGetter] DOMString getItem(in DOMString key);
-		[NameSetter] void setItem(in DOMString key, in DOMString data);
-		[NameDeleter] void removeItem(in DOMString key);
-		void clear();
-	};
-
-Logic is store JSON objects. Serialize in and out. Grab Underscore. Create a catalog object var catalog = {}. Add things by unique id.
-
-	console.log(this.entry());
-	console.log(this.entry('abc', 'the title', 'the description'));
+```html
+<script src="../dist/Glance.min.js"></script>
+```
 
 
-Data looks like.
+Glance has dependencies on UUID.js, Underscore.js, and browser support for localStorage. 
 
-	catalog = {
-		'entries': [
-			{pk: "7384D2E2-D2D4-4440-BC0A-D1C83A0DCA5E", title: "", description: ""}
-			{pk: "7384D2E2-D2D4-4440-BC0A-D1C83A0DCA5E", title: "", description: ""}
-		]
-	}
+* [UUID.js](https://github.com/LiosK/UUID.js)
+* [Underscore.js](http://underscorejs.org/)
 
 Usage
 -----
 
-How it works currently. Requires jQuery, Modernizer, randomUUID, Underscore.
+Roadmap
+-------
 
-	/* Main.js */
-	$(document).ready(function() {
-	  // Handler for .ready() called.
+Interface for localStorage.
 
-	  	// For demo purposes we flush the data.
-	  	// Glance.clear();
-	  	if(Glance.catalog.entries.length <= 0) {
-			Glance.add(Glance.entry('IOS Programming', 'A book about IOS stuff.'));
-			Glance.add(Glance.entry('Overdosed America', 'A book about drugs in the USA.'));
-			Glance.add(Glance.entry('The Happiness Project', 'A book about happiness.'));
-		}
+```
+interface Storage {
+	readonly attribute unsigned long length;
+	[IndexGetter] DOMString key(in unsigned long index);
+	[NameGetter] DOMString getItem(in DOMString key);
+	[NameSetter] void setItem(in DOMString key, in DOMString data);
+	[NameDeleter] void removeItem(in DOMString key);
+	void clear();
+	};
+```
 
-		var books = Glance.findAll();
-		var len = books.length;
-		var cat = $('.catalog');
-		if(len > 0) {
-			_.each(books, function(element, index, list){
-				cat.append(
-		    	$('<li>').append(
-		        $('<a>').attr('href','/detail/' + element.pk).append(
-		            $('<span>').attr('class', 'tab').append(element.title)
-		)));   
-			});
-		}
-	});
+Conceptually the idea behind Glance is to store and persist JSON objects in localStorage with some added features to add, find, and remove them. 
+
+JSON is serialized in/out and Underscore does a lot of the collection work. Glance is ideal for rapid prototypes, or caching for example.
+
+Glance at its base is a collection of JSON objects. Each with unique identitfiers placed into an array, that is then added to a JSON object. Using the key/value pairs of localStorage the **key** *store* then uses **value** of the *entries* object.
+
+```javascript
+{"entries":
+	[
+	{"title":"IOS Programming","description":"A book about IOS stuff.","id":"0e636a7c-7a5c-4f43-a8d7-4b3c2ab72aad"},
+    {"title":"Overdosed America","description":"A book about drugs in the USA.","id":"3df727d0-ac67-4908-a5ab-636c0b06a3cf"}
+	]
+}
+```
+
+Add some more [Jasmine](http://pivotal.github.io/jasmine/) unit tests since they are needed.
+
+Usage
+-----
+
+In the *test* folder there are [examples](https://github.com/mteece/Glance/blob/master/test/example.html) to get started. There are also [unit tests](https://github.com/mteece/Glance/blob/master/test/test-spec.js) that have some more example usage.
+
+
+```javascript
+g = new Glance();
+g.save({title: 'IOS Programming', description: 'A book about IOS stuff.'});
+g.save({title: 'Overdosed America', description:'A book about drugs in the USA.'});
+g.save({title: 'The Happiness Project', description:'A book about happiness.'});
+g.select({title: 'The Happiness Project'});
+```
+
+Functions:
+
+* Save()
+ * save(JSON Object);
+ * Saves the JSON object to the collection. Adding a unique indentitfier to the JSON object.
+ * Returns false or the JSON object.
+
+* Remove()
+ * remove(JSON Object);
+ * Goes through the *entries* collection and removes the first value that matches all of the key-value pairs listed in properties.
+ * Returns nothing.
+ 
+* Select()
+ * select(JSON Object);
+ * Looks through the *entries* and returns the first value that matches all of the key-value pairs listed in properties.
+ * Returns null or JSON object that matches.
+ 
+* SelectAll()
+ * selectAll();
+ * Returns the entire *entries* array.
+ * Returns array[].
+ 
+* Count()
+ * count();
+ * Returns the number of items in the collection.
+ * Returns 0 or number.
+
+* Flush()
+ * flush;
+ * Removes all items from the *entries* collection.
+ * Returns nothing.
+ 
+
+Source
+------
+
+Some useful [Grunt](http://gruntjs.com/) commands.
+
+```
+$ grunt
+$ grunt jasmine
+```
