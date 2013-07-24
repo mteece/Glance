@@ -1,7 +1,7 @@
 /*
- * typeahead.js
- * https://github.com/twitter/typeahead
- * Copyright 2013 Twitter, Inc. and other contributors; Licensed MIT
+ * glance.js
+ * https://github.com/mteece/glance
+ * Copyright 2013 Matthew Teece and other contributors; Licensed MIT
  */
 
 var Glance = (function() {

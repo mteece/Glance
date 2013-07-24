@@ -1,5 +1,5 @@
 {
-  "name": "Glance",
+  "name": "glance",
   "version": "0.0.1",
   "description": "Local storage engine.",
   "main": "src/glance.js",
@@ -11,7 +11,7 @@
     "url": "git://github.com/mteece/Glance.git"
   },
   "author": "Matthew Teece",
-  "license": "BSD",
+  "licenses" : [{ "type" : "MIT" , "url" : "http://github.com/mteece/glance/LICENSE"}],
   "readmeFilename": "README.md",
   "devDependencies": {
     "grunt": "~0.4.0",
