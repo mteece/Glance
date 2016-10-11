@@ -56,7 +56,7 @@ Glance at its base is a collection of JSON objects. Each with unique identitfier
 }
 ```
 
-Add some more [Jasmine](http://pivotal.github.io/jasmine/) unit tests since they are needed.
+Add some more [Jasmine](https://jasmine.github.io/) unit tests since they are needed.
 
 Usage
 -----
